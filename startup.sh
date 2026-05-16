@@ -26,4 +26,7 @@ echo "-----------------------------------------------"
 echo "Once the service is up and running, you can access it using the following command:"
 echo "kubectl port-forward svc/frontend-external 9090:80"
 
-#helm ls | awk 'NR > 1 { print  $1}' | xargs helm uninstall
+
+echo "==============================================="
+echo "To clean up the environment, run the following command:"
+echo "helm ls | awk 'NR > 1 { print  $1}' | xargs helm uninstall"
