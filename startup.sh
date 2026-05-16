@@ -25,6 +25,7 @@ echo "Waiting for all services to be ready..."
 echo "-----------------------------------------------"
 echo "Once the service is up and running, you can access it using the following command:"
 echo "kubectl port-forward svc/frontend-external 9090:80"
+echo "access the service at http://localhost:9090"
 
 
 echo "==============================================="
