@@ -1,0 +1,59 @@
+name: recommendationservice
+containerName: server
+image: us-central1-docker.pkg.dev/google-samples/microservices-demo/recommendationservice:v0.10.5
+replicas: 1
+terminationGracePeriodSeconds: 5
+
+serviceAccount:
+  create: true
+
+podSecurityContext:
+  fsGroup: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+
+ports:
+  - containerPort: 8080
+
+env:
+  - name: PORT
+    value: "8080"
+  - name: PRODUCT_CATALOG_SERVICE_ADDR
+    value: "productcatalogservice:3550"
+  - name: DISABLE_PROFILER
+    value: "1"
+
+readinessProbe:
+  periodSeconds: 5
+  grpc:
+    port: 8080
+
+livenessProbe:
+  periodSeconds: 5
+  grpc:
+    port: 8080
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 220Mi
+  limits:
+    cpu: 300m
+    memory: 700Mi
+
+services:
+  - name: recommendationservice
+    type: ClusterIP
+    ports:
+      - name: grpc
+        port: 8080
+        targetPort: 8080

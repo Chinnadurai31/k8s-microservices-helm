@@ -1,0 +1,15 @@
+{{- range .Values.services }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}
+  labels:
+    app: {{ .selector | default .name }}
+spec:
+  type: {{ .type | default "ClusterIP" }}
+  selector:
+    app: {{ .selector | default .name }}
+  ports:
+    {{- toYaml .ports | nindent 4 }}
+{{- end }}

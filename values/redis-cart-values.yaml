@@ -1,0 +1,58 @@
+name: redis-cart
+containerName: redis
+image: redis:alpine
+replicas: 1
+
+serviceAccount:
+  create: false
+
+podSecurityContext:
+  fsGroup: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+
+ports:
+  - containerPort: 6379
+
+readinessProbe:
+  periodSeconds: 5
+  tcpSocket:
+    port: 6379
+
+livenessProbe:
+  periodSeconds: 5
+  tcpSocket:
+    port: 6379
+
+volumeMounts:
+  - mountPath: /data
+    name: redis-data
+
+volumes:
+  - name: redis-data
+    emptyDir: {}
+
+resources:
+  requests:
+    cpu: 70m
+    memory: 200Mi
+  limits:
+    cpu: 125m
+    memory: 256Mi
+
+services:
+  - name: redis-cart
+    type: ClusterIP
+    ports:
+      - name: tcp-redis
+        port: 6379
+        targetPort: 6379

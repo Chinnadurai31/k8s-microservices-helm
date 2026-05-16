@@ -1,0 +1,60 @@
+name: cartservice
+containerName: server
+image: us-central1-docker.pkg.dev/google-samples/microservices-demo/cartservice:v0.10.5
+replicas: 1
+terminationGracePeriodSeconds: 5
+
+serviceAccount:
+  create: true
+
+podSecurityContext:
+  fsGroup: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+
+ports:
+  - containerPort: 7070
+
+env:
+  - name: REDIS_ADDR
+    value: "redis-cart:6379"
+
+readinessProbe:
+  initialDelaySeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 5
+  grpc:
+    port: 7070
+
+livenessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 5
+  grpc:
+    port: 7070
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+services:
+  - name: cartservice
+    type: ClusterIP
+    ports:
+      - name: grpc
+        port: 7070
+        targetPort: 7070

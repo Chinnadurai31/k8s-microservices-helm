@@ -1,0 +1,6 @@
+apiVersion: v2
+name: helm-manifest
+description: Helm chart for deploying Online Boutique microservices
+type: application
+version: 0.1.0
+appVersion: "v0.10.5"
